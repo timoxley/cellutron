@@ -292,7 +292,7 @@
 				break;
 				
 			}
-			Avatar.getInstance().update();
+			Avatar.getInstance().updateDirection();
 		}
 
 		public function keyDown(evt:KeyboardEvent) {
@@ -322,7 +322,7 @@
 				break;
 				
 			}
-			Avatar.getInstance().update();
+			Avatar.getInstance().updateDirection();
 		}
 		
 		public function hideOverlay() {
