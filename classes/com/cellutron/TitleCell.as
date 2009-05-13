@@ -1,5 +1,6 @@
 ﻿package com.cellutron 
 {
+	import adobe.utils.CustomActions;
 	import flash.display.MovieClip;
 	import flash.geom.Point;
 	import flash.text.StaticText;
@@ -30,14 +31,66 @@
 		
 		public function select(evt:MouseEvent) {
 			//TitleCell.selected = this;
-			trace("selected");
+			//trace("selected... w: " + this.width + " h: " + this.height);
+			var neighbours:Array = getNeighbours(this);
+			for each(var neighbourInfo:Array in neighbours) {
+				var distance = neighbourInfo[1];
+				var neighbour:TitleCell = neighbourInfo[0];
+				
+				////trace();
+				var neighbourArea = Math.pow(Math.PI * (neighbour.endWidth) / 2, 2);
+				////trace("this = ", this);
+				////trace("neighbour = ", neighbour);
+				////trace("this.endWidth = " + this.endWidth);
+				////trace("distance = " + distance);
+				var distanceFactor:Number = Math.sqrt(distance) / (4 * this.endWidth);
+				////trace("4 * this.endWidth = " + 4 * this.endWidth);
+				////trace("Math.sqrt(distance) = " + Math.sqrt(distance));
+				////trace("distanceFactor = " + distanceFactor);
+				var areaReduction =  neighbourArea * distanceFactor;
+				////trace();
+				var currentArea = Math.pow(Math.PI * this.endWidth / 2, 2);
+				
+				//////trace("neighbourArea = " + String(Math.pow(Math.PI * neighbour.width / 2, 2)));
+				//////trace("areaReduction = " + areaReduction);
+				
+				//////trace("currentRadius = " + this.width / 2);
+				//////trace("newRadius = " + newRadius);
+				//////trace("currentArea = " + currentArea);
+				var newArea = currentArea + areaReduction;
+				//////trace("newArea = " + newArea);
+				
+				//var a = (pi * r) ^ 2
+				//sqrt(a) = pi * r
+				//sqrt a / r = pi
+				//1 / r * sqrt a = pi
+				//r  = (pi / sqrt a) ^ 2
+				
+				//////trace("supposed new neighbour area = " + String(Math.pow(Math.PI * neighbour.width / 2, 2) - areaReduction));
+				
+				var newRadius = Math.sqrt(newArea)/Math.PI;
+				
+				//var scaleAmount = neighbour.width * 0.01;
+				neighbour.endWidth -= neighbour.endWidth * distanceFactor;
+				neighbour.endHeight = neighbour.endWidth;
+				
+				//this.scaleX += scaleAmount;
+				//this.scaleY = this.scaleX;
+				this.endWidth = newRadius *2;
+				this.endHeight = this.endWidth;
+				this.width = this.endWidth;
+				this.height = this.endHeight;
+				//////trace("newNeighbourArea = " + String(Math.pow(Math.PI * neighbour.width / 2, 2)));
+				neighbour.width = neighbour.endWidth;
+				neighbour.height = neighbour.endHeight;
+			}
 		}
 		
 		
 		
 		public function TitleCell() 
 		{
-			//this.addEventListener(MouseEvent.MOUSE_DOWN, select);
+			
 			
 			if (TitleCell.cellList == null) {
 				TitleCell.cellList = new Array();
@@ -50,19 +103,17 @@
 			}
 			
 			this.id = TitleCell.cellList.length;
-			//trace("TitleCell: Creating New. id: " + id);
+			////////trace("TitleCell: Creating New. id: " + id);
 			
 			
 		}
 		
 		public static function spawnCell():TitleCell {
-			//trace("TitleCell.cellList :" + TitleCell.cellList);
+			////////trace("TitleCell.cellList :" + TitleCell.cellList);
 			var newCell:TitleCell;
-			
 			if (TitleCell.cellList == null || TitleCell.cellList.length == 0) {
-				//trace("init cell list");
 				newCell = new TitleCell();
-				//trace("TitleCell.cellList" + TitleCell.cellList);
+				////////trace("TitleCell.cellList" + TitleCell.cellList);
 				newCell.randomSize();
 				//newCell.x = //(parentCell.width/2 + newCell.width/2) * Math.cos(angle * Math.PI / 180);
 				newCell.x = Main.stageRef.stageWidth / 2 + (Main.stageRef.stageWidth / 2 * 0.3 * (Math.random() - 0.5));//(parentCell.width/2 + newCell.width/2) * Math.sin(angle* Math.PI / 180);
@@ -71,17 +122,17 @@
 				//newCell.y += parentCell.y;
 				newCell.alpha = 0.8;
 				TitleCell.cellList.push(newCell);
-				
+				newCell.addEventListener(MouseEvent.MOUSE_DOWN, newCell.select);
 				return newCell;
 			}/* else {
-				//trace("init cell list");
+				////////trace("init cell list");
 				newCell = new TitleCell();
-				//trace("TitleCell.cellList" + TitleCell.cellList);
+				////////trace("TitleCell.cellList" + TitleCell.cellList);
 				TitleCell.cellList.push(newCell);
 				newCell.x = 75€;
 				newCell.y = 75;
 				TitleScreen.instance.addChild(newCell);
-				//trace(doesCollide(newCell));
+				////////trace(doesCollide(newCell));
 				return newCell;
 				
 				
@@ -95,16 +146,16 @@
 				count++;
 				if (count == 15) {
 					newCell = null;
-					//trace("Loop!");
+					////////trace("Loop!");
 					break;
 				}
-				//trace("Add cell");
-				//trace("parentCell: " + parentCell.id);
+				////trace("Add cell");
+				////////trace("parentCell: " + parentCell.id);
 				newCell = new TitleCell();
 				//trace("direction: " + TitleCell.direction);
 				//var randVal:Number = Math.random() * 50;
 				var angle:Number = TitleCell.direction + (Math.random() * 45) - 22.5;// - 45;// + //; * 1/newCell.magnitude);
-				//trace("angle: " + angle);
+				////////trace("angle: " + angle);
 				newCell.randomSize();
 				
 				
@@ -119,35 +170,32 @@
 
 				
 				/*
-				//trace("Math.sin(" + angle + "* Math.PI / 180) = " + Math.sin(angle * Math.PI / 180));
-				//trace("("+this.width+" + "+newCell.width+") * Math.cos("+angle+" * Math.PI / 180)" + (this.width + newCell.width) * Math.cos(angle * Math.PI / 180));
-				//trace("width: " + this.width + newCell.width + " angle: " + angle);
-				//trace("TitleCell: newCell.x " + newCell.x + " newCell.y " + newCell.y);
-				//trace("TitleCell: Children of parent: " + this.parent.numChildren);		*/		
+				////////trace("Math.sin(" + angle + "* Math.PI / 180) = " + Math.sin(angle * Math.PI / 180));
+				////////trace("("+this.width+" + "+newCell.width+") * Math.cos("+angle+" * Math.PI / 180)" + (this.width + newCell.width) * Math.cos(angle * Math.PI / 180));
+				////////trace("width: " + this.width + newCell.width + " angle: " + angle);
+				////////trace("TitleCell: newCell.x " + newCell.x + " newCell.y " + newCell.y);
+				////////trace("TitleCell: Children of parent: " + this.parent.numChildren);		*/		
 			} while (doesCollide(newCell));
+			
 			if (newCell != null) {
-				
-				//trace(TitleCell.cellList);
+				newCell.addEventListener(MouseEvent.MOUSE_DOWN, newCell.select);
 				TitleCell.cellList.push(newCell);
 				newCell.grow();
+				if (newCell.endWidth == 0) {
+					////trace("cell has 0 endWidth : " + newCell);
+					
+				}
 			}
 			return newCell;
 		}		
 		
-		public static function getNeighbours(checkCell:TitleCell):Array {
-			var neighboursList:Array = new Array();
-			
-			neighboursList
-			return neighboursList;
-		}
 		
 		public static function doesCollide(checkCell:TitleCell):Boolean {
 			var checkAgainst:TitleCell;
-			if (TitleCell.cellList.length == 1) {
-				return false;
-			}
+			
 			for (var i:uint = 0; i < TitleCell.cellList.length; i++) {
 				checkAgainst = TitleCell.cellList[i];
+				////trace("checkCell = " + checkCell + " against = " + checkAgainst);
 				if (checkAgainst == checkCell) {
 					return false;
 				}
@@ -159,7 +207,8 @@
 				if ((Math.pow(checkAgainst.x - checkCell.x, 2)
 					+ Math.pow(checkAgainst.y - checkCell.y, 2)) <
 						(Math.pow(checkWidth + againstWidth, 2) - ((Math.pow(checkWidth * 0.5 + againstWidth * 0.5, 2))))) {
-					return true;
+						////trace("collision");
+						return true;
 				} else {
 					// no collision found... yet
 				}
@@ -169,10 +218,11 @@
 		}
 		
 		public function randomSize() {
-			this.scaleX = (Math.random() * 0.5 + 0.1);
+			this.scaleX = (Math.random() * 0.4 + 0.05);
 			this.scaleY = this.scaleX;
 			this.endWidth = this.width;
 			this.endHeight = this.height;
+			this.magnitude = this.endWidth;
 		}
 		
 		public function grow():void {
@@ -180,7 +230,36 @@
 			TweenMax.from(this, 4, { scaleX:0, scaleY: 0, ease:Elastic.easeOut, renderOnStart:true} );//ease:CustomEase.byName("growEase")});
 		//	this.filters = new DropShadowFilterPlugin();
 			//this.filters = new F
-		}	
+		}
+		
+		public static function getNeighbours(checkCell:TitleCell):Array {
+			var neighboursList:Array = new Array();
+			var neighbourArray:Array;
+			for (var i:uint = 0; i < TitleCell.cellList.length; i++) {
+				var checkAgainst:TitleCell = TitleCell.cellList[i];
+				if (checkAgainst == checkCell) {
+					continue;
+				}
+				var checkWidth = checkCell.endWidth / 2;
+				var checkHeight = checkCell.endHeight / 2;
+				var againstWidth = checkAgainst.endWidth / 2;
+				var againstHeight = checkAgainst.endHeight / 2;
+				var distance = Math.pow(checkAgainst.x - checkCell.x, 2)
+					+ Math.pow(checkAgainst.y - checkCell.y, 2);
+				if (distance < 
+					(Math.pow(checkWidth * 4 + againstWidth, 2))) {
+					neighbourArray = new Array();
+					neighbourArray.push(checkAgainst, distance);
+					neighboursList.push(neighbourArray);
+				}
+			}
+			return neighboursList;
+		}
+
+		override public function toString():String {
+			
+			return "TitleCell id: | "+ this.id +" |      at x: "+ this.x +" y: "+ this.y +" mag: "+ this.magnitude;
+		}
 	}
 	
 	
