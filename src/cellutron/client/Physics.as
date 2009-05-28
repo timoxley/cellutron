@@ -239,9 +239,6 @@
 			_world = value;
 		}
 		
-		
-		
-		
 		public static function rotation_from_points(point1:Point, point2:Point = null):Number {
 			if (point2 == null) {
 				point2 = new Point();
@@ -285,6 +282,22 @@
 			 rotation += 180;
 			}
 			return rotation;
+		}
+		
+		public static function get_point_in_direction(initialPoint:Point, directionPoint:Point, distance:Number = 1):Point {
+			
+			var loc2:Point = directionPoint.clone();
+			var xNegative:Boolean = (loc2.x < Main.stageRef.stageWidth/2);
+			var yNegative:Boolean = (loc2.y < Main.stageRef.stageHeight/2);
+			loc2.normalize(20);
+			if (xNegative) {
+				loc2.x = -loc2.x;
+			}
+			if (yNegative) {
+				loc2.y = -loc2.y;
+			}
+			loc2 = loc2.add(initialPoint);
+			return loc2;
 		}
 		
 		public static function p_to_v(point:Point):b2Vec2 {
