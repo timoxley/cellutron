@@ -14,6 +14,7 @@
 	public class ControllableActor extends GenericActor
 	{
 		protected var key:KeyObject;
+		protected var mousePosition:Point;
 		protected var _enableControl:Boolean = false;
 		protected var acceleration:Number = 10;
 		protected var rotationTarget:DisplayObject;
@@ -25,6 +26,7 @@
 			key = new KeyObject(Main.stageRef);
 			autoRotate = false;
 			rotationTarget = display;
+			Main.stageRef.addEventListener(MouseEvent.MOUSE_MOVE, update_mouse);
 			
 		}
 		
@@ -104,6 +106,10 @@
 		public function set enableControl(value:Boolean):void 
 		{
 			_enableControl = value;
+		}
+		
+		private function update_mouse(evt:MouseEvent = null) {
+			mousePosition = new Point(evt.stageX, evt.stageY);
 		}
 
 	}

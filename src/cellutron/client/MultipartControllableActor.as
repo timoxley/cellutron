@@ -17,7 +17,7 @@
 	 */
 	public class MultipartControllableActor extends ControllableActor
 	{
-		protected var mousePosition:Point;
+		
 		public function MultipartControllableActor (boundingBoxType:String, parent:DisplayObjectContainer, display:DisplayObject, position:Point,
 			rotation:Number, boundingWidth = 0, boundingHeight = 0) {
 			super(boundingBoxType, parent, display, position, rotation, boundingWidth, boundingHeight);
@@ -33,7 +33,7 @@
 				throw new Error("Display for MultipartControllableActor needs a torso!");
 			}
 			
-			Main.stageRef.addEventListener(MouseEvent.MOUSE_MOVE, update_mouse);
+			
 			
 		}
 		
@@ -41,30 +41,21 @@
 			super.step(evt);
 			//updateRotation(display['legs'], new Point(body.GetLinearVelocity().x, body.GetLinearVelocity().y));
 			
-			trace("mousePosition.x" + mousePosition.x + " mousePosition.y " + mousePosition.y);
-			trace("display.x" + display.x + " display.y " + display.y);
+			
 			var displayPosition = new Point(display.x, display.y);
-			displayPosition.offset( -Main.stageRef.stageWidth / 2, -Main.stageRef.stageHeight / 2);
+			
 			updateRotation(display['torso'], mousePosition, displayPosition);
-			trace(display['torso'].rotation)
+			
 			/*if (display['legs'].rotation > display['torso'].rotation + 90) {
-				display['legs'].rotation = display['torso'].rotation + 90;
-				 
+				display['legs'].rotation = display['torso'].rotation + 90;	 
 			} else if (display['legs'].rotation < display['torso'].rotation - 90) {
-				
-				display['legs'].rotation = display['torso'].rotation + 90;
-				
+				display['legs'].rotation = display['torso'].rotation + 90;	
 			}*/
 			//display['torso'].rotation = Physics.rotation_from_points(reference, mousePosition);
 
 		}
 		
-		private function update_mouse(evt:MouseEvent = null) {
-			
-			mousePosition = new Point(evt.stageX, evt.stageY);
-			mousePosition.offset(-Main.stageRef.stageWidth / 2, -Main.stageRef.stageHeight / 2);
-			
-		}
+		
 	}
 	
 	
