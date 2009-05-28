@@ -28,7 +28,7 @@
 		public function init(evt:Event = null) {
 				
 			background = new Sprite();
-			var myBitmap:BitmapData = new BackgroundImg(100, 100);
+			var myBitmap:BitmapData = new SandBackground(100, 100);
   
 			var matrix:Matrix = new Matrix();
 
