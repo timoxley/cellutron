@@ -27,7 +27,7 @@
  * THE SOFTWARE.
  */
 
-package org.flintparticles
+package cellutron.client.effects.particle
 {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
@@ -48,23 +48,23 @@ package org.flintparticles
 	import cellutron.client.SimulationClient;
 	import cellutron.client.Physics;
 	
-	public class Firework extends Emitter2D
+	public class FireworkEmitter extends Emitter2D
 	{
 		
 		private var previousAcc:Action = null;
 		private var previousVel:Action = null;
-		public function Firework()
+		public function FireworkEmitter()
 		{
-			counter = new Blast( 25 );
+			counter = new Blast( 100 );
 			
 			addInitializer( new SharedImage( new Dot( 1 ) ) );
-			addInitializer( new ColorInit( 0xFFEFD286, 0xFFFF6600 ) );
+			addInitializer( new ColorInit( 0xFFFF6600, 0xFFE9A25A ) );
 			//addInitializer( new Velocity( new DiscSectorZone( new Point( 0, 0 ), 40, 30, -4 * Math.PI / 7, -3 * Math.PI / 7 ); //new DiscZone( new Point( 0, 0 ), 10, 10 ) ) );
 			addInitializer( new Velocity(new DiscSectorZone(new Point(), 450, 350, -7 * Math.PI / 7, -3 * Math.PI / 7 )));
 			//new DiscSectorZone(
-			addInitializer( new Lifetime( 0.1, 0.3) );
+			addInitializer( new Lifetime( 0.3, 0.1) );
 			
-			addAction( new Age( Quadratic.easeIn ) );
+			addAction( new Age( Quadratic.easeOut ) );
 			addAction( new Move() );
 			addAction( new Fade() );
 			//addAction(new Accelerate(100, 100));
@@ -72,9 +72,10 @@ package org.flintparticles
 			//addAction( new LinearDrag( 0.5 ) );
 			
 			//addEventListener( EmitterEvent.EMITTER_EMPTY, restart, false, 0, true );
+			
 		}
 		
-		public function blast(position:Point) {
+		public function blast(position:Point, direction:Point) {
 			if (previousAcc != null) {
 				this.removeAction(previousAcc);
 				
@@ -85,25 +86,19 @@ package org.flintparticles
 			}
 			this.x = position.x;
 			this.y = position.y;
-			//position:Point = new Point(evt.stageX, evt.stageY);
-			var avatarDisplay:DisplayObject = SimulationClient.get_instance().avatar.display
-			var avatarPoint:Point = new Point(avatarDisplay.x, avatarDisplay.y);
-			
-			var diff:Point = avatarPoint.subtract(position);
+						
+			var diff:Point = position.subtract(direction);
 			diff.normalize(200);
 			
-			
 			var newAction = new Accelerate(-diff.x, -diff.y);
-			
-			
+
 			addAction(newAction);
 			previousAcc = newAction;
-			//newAction =  new Velocity( new DiscSectorZone(new Point(), diff.x, diff.y, -4 * Math.PI / 7, -3 * Math.PI / 7 ));
 			
-			//addAction(newAction);
-			//previousVel = newAction;
-			rotation = Physics.rotation_from_points(diff) + 225;
-			trace(rotation);
+			//rotation = SimulationClient.get_instance().player.display['torso'].rotation;//Physics.rotation_from_points(position, direction);// + 225;
+			rotation = Physics.rotation_from_points(position, direction) + 45 + 180;
+			
+
 			start();
 			
 		}

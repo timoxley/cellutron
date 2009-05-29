@@ -27,13 +27,14 @@
 		
 		public var mode:String = NOT_READY;
 		public var environment:Environment;
-		public var avatar:AvatarActor;
+		public var player:Player;
 		
 		public var timer:DeltaTimer;
+		public var timestep:Number;
 		
 		private var timeElapsedSinceTick:uint = 0;
 		
-		var counter:int = 0;
+		private var counter:int = 0;
 		
 		
 		private var main:Main;
@@ -41,6 +42,7 @@
 		public function SimulationClient() {
 			timer = new DeltaTimer();
 			
+			timestep = 1 / Main.stageRef.frameRate * 1000;
 			
 			//addEventListener(LOAD_START, this.startLoad);
 			//addEventListener(LOAD_DONE, this.finishLoad);
@@ -75,19 +77,19 @@
 		
 		public function init(evt:Event = null) {
 			if (!environment.isVisible) {
-				var init_avatar:Function = function() {
+				var init_player:Function = function() {
 
-					environment.removeEventListener(CellutronClip.APPEAR, init_avatar);
+					environment.removeEventListener(CellutronClip.APPEAR, init_player);
 					environment.init();
 					var position = new Point(Main.stageRef.stageWidth /2, Main.stageRef.stageHeight /2);
-					avatar = new AvatarActor(Main.stageRef, position);
-					avatar.display.addEventListener(CellutronClip.APPEAR, unpause);
-					GameObject(avatar.display).appear();
+					player = new Player(Main.stageRef, position);
+					player.display.addEventListener(CellutronClip.APPEAR, unpause);
+					GameObject(player.display).appear();
 					
 					start();
 					
 				};
-				environment.addEventListener(CellutronClip.APPEAR, init_avatar);
+				environment.addEventListener(CellutronClip.APPEAR, init_player);
 				environment.appear();
 			}
 			
@@ -95,7 +97,7 @@
 		
 		public function stepCalc(evt:Event) {
 			if (mode == RUNNING) {
-				var timestep:Number = 1/Main.stageRef.frameRate*1000;
+				
 				timeElapsedSinceTick += timer.calculateDeltaTime();
 				
 				if (timeElapsedSinceTick > timestep) {
@@ -108,6 +110,9 @@
 			}			
 		}
 		
+		
+		
+		
 		public function start() {
 			
 			timer.reset();
@@ -119,14 +124,14 @@
 			this.main.menu.appear();
 			main.menu.addEventListener(CellutronClip.DISAPPEAR, this.unpause);
 			main.removeEventListener(Event.ENTER_FRAME, stepCalc);
-			avatar.enableControl = false;
+			player.enableControl = false;
 		}
 		
 		public function unpause(evt:Event = null) {
 			//trace("Unpause");
 			main.menu.removeEventListener(CellutronClip.DISAPPEAR, this.unpause);
 			main.addEventListener(Event.ENTER_FRAME, stepCalc);
-			avatar.enableControl = true;
+			player.enableControl = true;
 			mode = RUNNING;	
 		}
 		

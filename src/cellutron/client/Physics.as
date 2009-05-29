@@ -13,11 +13,7 @@
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
-	
-	
-	
-
-	
+	import cellutron.client.effects.particle.ParticleEffect;
 	
 	public class Physics
 	{
@@ -65,7 +61,7 @@
 		   
 			SimulationClient.get_instance().addEventListener(SimulationClient.TICK, step);
 			
-			ParticleEffects.init_particle_generator();
+			ParticleEffect.init_particle_generator();
 			
 		   
 		}
@@ -177,18 +173,17 @@
 			rightWall.CreateShape(wallShapeDef);
 			rightWall.SetMassFromShapes();
 			add_garbage();
-			
-			trace("body count:" + world.GetBodyCount());
-			
-			
+		
 		}
 		
 		
 		public static function add_garbage() {
 			while (world.GetBodyCount() < 80) {
 				var wallShapeDef:b2PolygonDef = new b2PolygonDef();
-				wallShapeDef.SetAsBox(Physics.p_to_m((Math.random() * 5) + 5), 
+				
+				wallShapeDef.SetAsBox(Physics.p_to_m((Math.random() * 10) + 5), 
 					Physics.p_to_m((Math.random() * 5) + 5));
+					
 				wallShapeDef.friction = 0.5;
 				wallShapeDef.restitution = 0.4;//Math.random() * 0.7 + (0.7/2);
 				wallShapeDef.density = 1;//Math.random() * 5 + 0.2;
@@ -202,6 +197,8 @@
 				var leftWall:b2Body = world.CreateBody(wallBodyDef);
 				leftWall.CreateShape(wallShapeDef);
 				leftWall.SetMassFromShapes();
+				
+				
 			}
 			
 		}
@@ -284,20 +281,16 @@
 			return rotation;
 		}
 		
-		public static function get_point_in_direction(initialPoint:Point, directionPoint:Point, distance:Number = 1):Point {
-			
+		public static function get_point_in_direction(initialPoint:Point, directionPoint:Point, distance:Number = 10):Point {
 			var loc2:Point = directionPoint.clone();
-			var xNegative:Boolean = (loc2.x < Main.stageRef.stageWidth/2);
-			var yNegative:Boolean = (loc2.y < Main.stageRef.stageHeight/2);
-			loc2.normalize(20);
-			if (xNegative) {
-				loc2.x = -loc2.x;
-			}
-			if (yNegative) {
-				loc2.y = -loc2.y;
-			}
-			loc2 = loc2.add(initialPoint);
-			return loc2;
+			var xNegative:Boolean = false;// (loc2.x < Main.stageRef.stageWidth / 2);
+			var yNegative:Boolean = false;//(loc2.y < Main.stageRef.stageHeight/2);
+			
+			loc2.normalize(distance);
+			var point3:Point = directionPoint.subtract(initialPoint);
+			point3.normalize(distance);
+			point3 = point3.add(initialPoint);
+			return point3;
 		}
 		
 		public static function p_to_v(point:Point):b2Vec2 {

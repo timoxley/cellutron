@@ -7,16 +7,18 @@
 	import flash.events.Event;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
+	import flash.events.MouseEvent;
+		
 	/**
 	 * ...
 	 * @author ...
 	 */
 	public class ControllableActor extends GenericActor
 	{
-		protected var key:KeyObject;
-		protected var mousePosition:Point;
+		public var key:KeyObject;
+		public var mousePosition:Point;
 		protected var _enableControl:Boolean = false;
-		protected var acceleration:Number = 10;
+		public var acceleration:Number = 10;
 		protected var rotationTarget:DisplayObject;
 		
 		public function ControllableActor(boundingBoxType:String, parent:DisplayObjectContainer, display:DisplayObject, position:Point,

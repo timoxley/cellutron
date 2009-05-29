@@ -68,8 +68,6 @@
 		
 		public function appear_start(evt:TweenEvent = null):void {
 			//trace("appear start. " + this + " visible: " + isVisible);
-			trace("appear start. " + this + " visible: " + isVisible + " paused: " + this.transition.paused);
-
 			if (!isVisible) {
 				add();
 				
@@ -78,7 +76,7 @@
 		}
 		
 		public function appear_complete(evt:TweenEvent = null):void {
-			trace("appear complete. " + this + " visible: " + isVisible + " paused: " + this.transition.paused);
+			
 			if (!(this.transition.paused)) {
 				if (!isVisible) {
 					remove();
@@ -102,7 +100,7 @@
 		}
 		
 		public function appear(evt:TweenEvent = null):void {
-			trace("Appear;");
+			
 			if (!isVisible) {
 				toggleAppear();
 			}
@@ -119,7 +117,7 @@
 		public function toggleAppear():void  {
 			
 			if (isVisible) {
-				trace("reverse");
+				
 				this.transition.reverse();	
 				if (!transitionEnable) {
 					this.transition.progress = 100;
@@ -133,7 +131,7 @@
 				if (transition.paused) {
 					this.transition.resume();
 				}
-				trace("activate");
+				
 				//this.transition.activate();
 			}
 			

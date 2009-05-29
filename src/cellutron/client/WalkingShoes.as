@@ -21,7 +21,7 @@
 		
 		public function step(evt:Event) {
 			//stop();
-			var velocity = SimulationClient.get_instance().avatar.body.GetLinearVelocity().Length();
+			var velocity = SimulationClient.get_instance().player.body.GetLinearVelocity().Length();
 			if (velocity > 0.2) {
 				play();
 				

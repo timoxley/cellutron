@@ -10,20 +10,27 @@
 
 	public class Environment extends CellutronClip
 	{
-		public var background:Sprite;		
+		public static var EnvironmentWidth = 50000;
+		public static var EnvironmentHeight = 50000;
+		
+		public var background:Sprite;
+		//public var decals:Sprite;
+		//public var objects:Sprite;
+		
+		private static var _instance:Environment;
+		
 		protected var _world:b2World;
 		
 		public function Environment()
 		{
 			super();
-			
+			if (instance == null) {
+				instance = this;
+			}
 			this.transitionEnable = false;
 			this.scaleX = 1;
 			this.scaleY = 1;
-			
 		}
-		
-		
 		
 		public function init(evt:Event = null) {
 				
@@ -33,7 +40,7 @@
 			var matrix:Matrix = new Matrix();
 
 			background.graphics.beginBitmapFill(myBitmap, matrix, true);
-			background.graphics.drawRect(0, 0, 50000, 50000);
+			background.graphics.drawRect(0, 0, EnvironmentWidth, EnvironmentHeight);
 			background.graphics.endFill();
 			
 			addChild(background);
@@ -56,5 +63,12 @@
 			background.graphics.endFill();
 			
 		}	
+		
+		public static function get instance():Environment { return _instance; }
+		
+		public static function set instance(value:Environment):void 
+		{
+			_instance = value;
+		}
 	}
 }
