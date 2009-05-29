@@ -16,6 +16,7 @@
 		
 		public function GameButton(name:String, clickCallback:Function) {
 			super();
+			
 			this.addEventListener(MouseEvent.ROLL_OVER, this.doRollOver);
 			this.addEventListener(MouseEvent.ROLL_OUT, this.doRollOut);
 			this.addEventListener(MouseEvent.MOUSE_UP, clickCallback);
@@ -37,20 +38,20 @@
 			this.selected = true;
 			this.btnText.textColor = 0xFFFFFF;
 			useHandCursor = true;
-			this.graphics.clear();
+			/*this.graphics.clear();
 			this.graphics.beginFill(0xaaaaaa, 0.9);
 			this.graphics.drawRoundRect(0 - bounds.width/2, 0 - bounds.height/2, bounds.width, bounds.height, 20, 20);
 			
-			this.graphics.endFill();
+			this.graphics.endFill();*/
 		}
 		public function doRollOut(evt:Event = null) {
 			this.selected = false;
 			this.btnText.textColor = 0x333333;
 			this.graphics.clear();
-			this.graphics.beginFill(0xaaaaaa, 0.7);
+			/*this.graphics.beginFill(0xaaaaaa, 0.7);
 			this.graphics.drawRoundRect(0 - bounds.width/2, 0 - bounds.height/2, bounds.width, bounds.height, 20, 20);
 			
-			this.graphics.endFill();
+			this.graphics.endFill();*/
 		}
 	}
 	

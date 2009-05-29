@@ -13,9 +13,9 @@
 		public var btnCredits:MovieClip;
 		public var btnExit:MovieClip;
 		public var buttonList:Array;
-		public const PADDING:uint = 10;
+		public const PADDING:uint = 30;
 		
-		public static const TOP = 100;
+		public static const TOP = 120;
 		public const OPEN:String = "menuOpen";
 		public const CLOSE:String = "menuClose";
 		public var currentSelection;
@@ -37,11 +37,15 @@
 			Main.stageRef.addEventListener(Event.RESIZE, this.position);
 			
 			Main.stageRef.addEventListener(KeyboardEvent.KEY_DOWN, this.key_down);
+			this.destinationScale = 0.7;
+			this.transition.setDestination("scaleX", destinationScale);
+			this.transition.setDestination("scaleY", destinationScale);
 			for (var i:uint = 0; i < buttonList.length; i++) {
-				var currentButton = buttonList[i];
+				var currentButton:GameButton = buttonList[i];
 				////trace("currentButton: " + currentButton.btnName + " " + i);
 				if (null != buttonList[i - 1]) {
-					currentButton.y += buttonList[i - 1].y + buttonList[i - 1].height + PADDING;
+					currentButton.y += buttonList[i - 1].y + buttonList[i - 1].height - PADDING;
+					
 				}
 				addChild(currentButton);
 			}
